@@ -37,7 +37,7 @@ npm i chubbyjs-mock@1.0
 
 ## Copyright
 
-Dominik Zogg 2020
+Dominik Zogg 2021
 
 [1]: https://www.npmjs.com/package/chubbyjs-mock
 
