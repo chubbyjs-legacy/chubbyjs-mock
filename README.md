@@ -1,6 +1,6 @@
 # chubbyjs-mock
 
-[![Build Status](https://api.travis-ci.org/chubbyjs/chubbyjs-mock.png?branch=master)](https://travis-ci.org/chubbyjs/chubbyjs-mock)
+[![CI](https://github.com/chubbyjs/chubbyjs-mock/workflows/CI/badge.svg?branch=master)](https://github.com/chubbyjs/chubbyjs-mock/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/chubbyjs/chubbyjs-mock/badge.svg?branch=master)](https://coveralls.io/github/chubbyjs/chubbyjs-mock?branch=master)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/chubbyjs/chubbyjs-mock/master)](https://dashboard.stryker-mutator.io/reports/github.com/chubbyjs/chubbyjs-mock/master)
 
