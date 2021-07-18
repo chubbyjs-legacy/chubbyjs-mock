@@ -12,9 +12,7 @@ test('factory', () => {
         }
     }
 
-    const sample = MockByCalls<Sample>([
-        Call.create('a').with('name1').willReturn('name1'),
-    ]);
+    const sample = MockByCalls<Sample>([Call.create('a').with('name1').willReturn('name1')]);
 
     expect(sample.a('name1')).toBe('name1');
 });

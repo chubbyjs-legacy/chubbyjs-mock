@@ -1,7 +1,7 @@
-import ArgumentInterface from "./ArgumentInterface";
+import ArgumentInterface from './ArgumentInterface';
 
 class ArgumentCallback implements ArgumentInterface {
-    constructor(private callback: Function) { }
+    constructor(private callback: Function) {}
 
     public assert(argument: unknown): void {
         this.callback(argument);

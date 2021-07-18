@@ -1,5 +1,5 @@
-import { isArgument } from "./Argument/ArgumentInterface";
-import Call from "./Call";
+import { isArgument } from './Argument/ArgumentInterface';
+import Call from './Call';
 
 const MockByCalls = <T>(calls: Array<Call>): T => {
     const mock = {
@@ -53,7 +53,7 @@ const MockByCalls = <T>(calls: Array<Call>): T => {
 
                 return callback(args);
             }
-        }
+        },
     };
 
     calls.forEach((call: Call) => {
@@ -63,11 +63,11 @@ const MockByCalls = <T>(calls: Array<Call>): T => {
             // @ts-expect-error TS7053
             mock[method] = (...args: Array<unknown>): unknown => {
                 return mock.__mockedCall(method, args);
-            }
+            };
         }
     });
 
-    return mock as unknown as T;
-}
+    return (mock as unknown) as T;
+};
 
 export default MockByCalls;

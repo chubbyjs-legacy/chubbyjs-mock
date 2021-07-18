@@ -1,13 +1,13 @@
 class Call {
     private method: string;
     private hasWithValue: boolean = false;
-    private withValue: Array<unknown>|undefined;
-    private error: Error|undefined;
+    private withValue: Array<unknown> | undefined;
+    private error: Error | undefined;
     private hasReturnSelfValue: boolean = false;
     private hasReturnValue: boolean = false;
     private hasReturnCallbackValue: boolean = false;
     private returnValue: any;
-    private returnCallbackValue: Function|undefined;
+    private returnCallbackValue: Function | undefined;
 
     private constructor(method: string) {
         this.method = method;
@@ -118,11 +118,11 @@ class Call {
         return this.hasReturnCallbackValue;
     }
 
-    public getWith(): Array<unknown>|undefined {
+    public getWith(): Array<unknown> | undefined {
         return this.withValue;
     }
 
-    public getError(): Error|undefined {
+    public getError(): Error | undefined {
         return this.error;
     }
 
@@ -130,7 +130,7 @@ class Call {
         return this.returnValue;
     }
 
-    public getReturnCallback(): Function|undefined {
+    public getReturnCallback(): Function | undefined {
         return this.returnCallbackValue;
     }
 }
