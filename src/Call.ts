@@ -1,7 +1,7 @@
 class Call {
     private method: string;
     private hasWithValue: boolean = false;
-    private withValue: IArguments|undefined;
+    private withValue: Array<unknown>|undefined;
     private error: Error|undefined;
     private hasReturnSelfValue: boolean = false;
     private hasReturnValue: boolean = false;
@@ -17,7 +17,7 @@ class Call {
         return new Call(method);
     }
 
-    public with(...withValue: any): Call {
+    public with(...withValue: Array<unknown>): Call {
         this.hasWithValue = true;
         this.withValue = withValue;
 
@@ -118,7 +118,7 @@ class Call {
         return this.hasReturnCallbackValue;
     }
 
-    public getWith(): IArguments|undefined {
+    public getWith(): Array<unknown>|undefined {
         return this.withValue;
     }
 
