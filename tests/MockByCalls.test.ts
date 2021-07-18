@@ -3,17 +3,23 @@ import MockByCalls from '../src/MockByCalls';
 import { expect, test } from '@jest/globals';
 
 test('mocked methods', () => {
-    class Sample {
+    class BaseSample {
         public a(name: string): string {
-            return name;
-        }
-
-        public b(name: string): string {
             return name;
         }
     }
 
-    const sample = MockByCalls<Sample>([
+    class Sample extends BaseSample {
+        public b(name: string): string {
+            return name;
+        }
+
+        public c(name: string): string {
+            return name;
+        }
+    }
+
+    const sample = MockByCalls<Sample>(Sample, [
         Call.create('a').with('name1').willReturn('name1'),
         Call.create('b').with('name2').willReturn('name2'),
     ]);

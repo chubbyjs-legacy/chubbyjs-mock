@@ -23,7 +23,7 @@ A helper trait simplify mocking within jest.
 ## Requirements
 
  * node: 10
- * [moq.ts][2]: ^6.4.0
+ * [jest][2]: ^26.6.1
 
 ## Installation
 
@@ -41,4 +41,4 @@ Dominik Zogg 2021
 
 [1]: https://www.npmjs.com/package/chubbyjs-mock
 
-[2]: https://www.npmjs.com/package/moq.ts
+[2]: https://www.npmjs.com/package/jest
