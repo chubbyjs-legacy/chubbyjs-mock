@@ -1,5 +1,6 @@
 import { isArgument } from './Argument/ArgumentInterface';
 import Call from './Call';
+import { expect } from '@jest/globals';
 
 const MockByCalls = <T>(calls: Array<Call>): T => {
     const mock = {
