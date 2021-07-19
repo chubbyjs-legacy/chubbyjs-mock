@@ -2,12 +2,29 @@ import ArgumentInterface from './ArgumentInterface';
 import { expect } from '@jest/globals';
 
 class ArgumentInstanceOf implements ArgumentInterface {
-    discriminator = 'ArgumentInstanceOf';
+    ArgumentInterface = true;
 
-    constructor(private func: Function) {}
+    constructor(private type: string | Function) {}
 
-    public assert(argument: unknown): void {
-        expect(argument).toBeInstanceOf(this.func);
+    public assert(argument: any): void {
+        if (typeof this.type === 'function') {
+            // function
+            if (typeof argument === 'function') {
+                if (argument.name !== this.type.name) {
+                    throw new Error(`Expected type ${this.type.name}, given type ${argument.name}`);
+                }
+            }
+            // class based object
+            else {
+                if (!(argument instanceof this.type)) {
+                    throw new Error(`Expected type ${this.type.name}, given type ${argument.constructor.name}`);
+                }
+            }
+        } else {
+            if (typeof argument !== this.type) {
+                throw new Error(`Expected type ${this.type}, given type ${typeof argument}`);
+            }
+        }
     }
 }
 

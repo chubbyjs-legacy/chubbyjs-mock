@@ -3,8 +3,7 @@ interface ArgumentInterface {
 }
 
 export const isArgument = (argument: unknown): argument is ArgumentInterface => {
-    // @ts-expect-error TS2551
-    return argument.hasOwnProperty('assert') && typeof argument.assert === 'function';
+    return typeof argument === 'object' && null !== argument && argument.hasOwnProperty('ArgumentInterface');
 };
 
 export default ArgumentInterface;
