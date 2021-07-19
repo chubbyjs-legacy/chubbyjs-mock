@@ -2,14 +2,26 @@ import { expect } from '@jest/globals';
 import { isArgument } from './Argument/ArgumentInterface';
 import Call from './Call';
 
-const MockByCalls = <T extends Object>(className: any, calls: Array<Call>): T => {
+const getMethods = (givenObject: any) => {
+    const props: Array<string> = [];
+    let object = givenObject;
+    do {
+        props.push(...Object.getOwnPropertyNames(object));
+    } while ((object = Object.getPrototypeOf(object)));
+
+    return props.filter((prop) => typeof givenObject[prop] == 'function');
+};
+
+const defaultMethods = getMethods(new Object());
+
+const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>): T => {
     let callIndex = 0;
 
     const mock = {
         __mockedMethod: (givenMethod: string, givenArgs: Array<unknown>) => {
             callIndex++;
 
-            const prefix = `Mock "${className}":`;
+            const prefix = `Mock "${classDefinition.name}":`;
             const suffix = `at call ${callIndex}`;
 
             const call = calls[callIndex - 1];
@@ -68,23 +80,7 @@ const MockByCalls = <T extends Object>(className: any, calls: Array<Call>): T =>
         },
     };
 
-    function getAllFuncs(toCheck: any) {
-        const props: Array<string> = [];
-        let obj = toCheck;
-        do {
-            props.push(...Object.getOwnPropertyNames(obj));
-        } while ((obj = Object.getPrototypeOf(obj)));
-
-        const objectProbs: Array<string> = [];
-        let obj2 = new Object();
-        do {
-            objectProbs.push(...Object.getOwnPropertyNames(obj2));
-        } while ((obj2 = Object.getPrototypeOf(obj2)));
-
-        return props.filter((x) => !objectProbs.includes(x) && typeof toCheck[x] == 'function');
-    }
-
-    const methods = getAllFuncs(new className());
+    const methods = getMethods(new classDefinition()).filter((method) => !defaultMethods.includes(method));
 
     methods.forEach((method: string) => {
         // @ts-expect-error TS7053
