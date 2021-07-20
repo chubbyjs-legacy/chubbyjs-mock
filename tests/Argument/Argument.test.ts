@@ -9,7 +9,7 @@ describe('isArgument', () => {
     });
 
     test('ArgumentCallback is Argument', () => {
-        expect(isArgument(new ArgumentCallback(() => { }))).toBe(true);
+        expect(isArgument(new ArgumentCallback(() => {}))).toBe(true);
     });
 
     test('{} is not Argument', () => {

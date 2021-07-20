@@ -4,6 +4,7 @@ import Call from './Call';
 
 const getMethods = (givenObject: any) => {
     const props: Array<string> = [];
+
     let object = givenObject;
     do {
         props.push(...Object.getOwnPropertyNames(object));
@@ -11,8 +12,6 @@ const getMethods = (givenObject: any) => {
 
     return props.filter((prop) => typeof givenObject[prop] == 'function');
 };
-
-const defaultMethods = getMethods(new Object());
 
 const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>): T => {
     let callIndex = 0;
@@ -80,7 +79,7 @@ const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>)
         },
     };
 
-    const methods = getMethods(new classDefinition()).filter((method) => !defaultMethods.includes(method));
+    const methods = getMethods(new classDefinition());
 
     methods.forEach((method: string) => {
         // @ts-expect-error TS7053

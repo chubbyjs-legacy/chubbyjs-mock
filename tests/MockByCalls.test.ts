@@ -10,6 +10,10 @@ test('mocked methods', () => {
     }
 
     class Sample extends BaseSample {
+        public constructor(private defaultName: string) {
+            super();
+        }
+
         public b(name: string): string {
             return name;
         }
