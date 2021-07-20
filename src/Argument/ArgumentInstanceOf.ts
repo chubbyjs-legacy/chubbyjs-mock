@@ -1,5 +1,4 @@
 import ArgumentInterface from './ArgumentInterface';
-import { expect } from '@jest/globals';
 
 class ArgumentInstanceOf implements ArgumentInterface {
     ArgumentInterface = true;

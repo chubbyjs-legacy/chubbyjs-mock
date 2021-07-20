@@ -23,7 +23,6 @@ A helper trait simplify mocking within jest.
 ## Requirements
 
  * node: 10
- * [jest][2]: ^26.6.1
 
 ## Installation
 
@@ -35,10 +34,30 @@ npm i chubbyjs-mock@1.0
 
 ## Usage
 
+```ts
+import { expect, test } from '@jest/globals';
+import ArgumentCallback from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentCallback';
+import ArgumentInstanceOf from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentInstanceOf';
+import Call from '@chubbyjs/chubbyjs-mock/dist/Call';
+import MockByCalls from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
+
+test('execute', () => {
+    const dateTimeService = MockByCalls<DateTimeService>(DateTimeService, [
+        Call.create('format')
+            .with(new ArgumentInstanceOf(Date), 'c')
+            .willReturn('2004-02-12T15:19:21+00:00'),
+        Call.create('format')
+            .with(new ArgumentCallback((date: Date) => expect(date).toBeInstanceof(Date)), 'c')
+            .willReturn('2008-05-23T08:12:55+00:00'),
+    ]);
+
+    expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
+    expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+});
+```
+
 ## Copyright
 
 Dominik Zogg 2021
 
 [1]: https://www.npmjs.com/package/chubbyjs-mock
-
-[2]: https://www.npmjs.com/package/jest
