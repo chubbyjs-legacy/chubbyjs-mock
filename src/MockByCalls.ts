@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals';
 import { isArgument } from './Argument/ArgumentInterface';
 import Call from './Call';
 
@@ -13,17 +12,55 @@ const getMethods = (givenObject: any) => {
     return props.filter((prop) => typeof givenObject[prop] == 'function');
 };
 
+const matchMethod = (expectedMethod: string, givenMethod: string, prefix: string, suffix: string) => {
+    if (givenMethod !== expectedMethod) {
+        throw new Error(`${prefix} Expected method "${expectedMethod}", given "${givenMethod}" ${suffix}`);
+    }
+};
+
+const matchArguments = (
+    expectedArgs: Array<unknown>,
+    givenArgs: Array<unknown>,
+    method: string,
+    prefix: string,
+    suffix: string,
+) => {
+    if (givenArgs.length !== expectedArgs.length) {
+        throw new Error(
+            `${prefix} Expected argument count ${expectedArgs.length}, given ${givenArgs.length}, method "${method}" ${suffix}`,
+        );
+    }
+
+    expectedArgs.forEach((expectedArg: unknown, i) => {
+        const givenArg = givenArgs[i];
+
+        if (isArgument(expectedArg)) {
+            expectedArg.assert(givenArg);
+
+            return;
+        }
+
+        if (givenArg !== expectedArg) {
+            throw new Error(
+                `${prefix} Expected argument ${JSON.stringify(expectedArg)}, given ${JSON.stringify(
+                    givenArg,
+                )} at argument ${i}, method "${method}" ${suffix}`,
+            );
+        }
+    });
+};
+
 const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>): T => {
     let callIndex = 0;
 
     const mock = {
         __mockedMethod: (givenMethod: string, givenArgs: Array<unknown>) => {
-            callIndex++;
-
             const prefix = `Mock "${classDefinition.name}":`;
             const suffix = `at call ${callIndex}`;
 
-            const call = calls[callIndex - 1];
+            const call = calls[callIndex];
+
+            callIndex++;
 
             if (!call) {
                 throw new Error(`${prefix} Missing defintion ${suffix}`);
@@ -31,30 +68,12 @@ const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>)
 
             const expectedMethod = call.getMethod();
 
-            if (givenMethod !== expectedMethod) {
-                throw new Error(`${prefix} Expected method "${expectedMethod}", given "${givenMethod}" ${suffix}`);
-            }
+            matchMethod(expectedMethod, givenMethod, prefix, suffix);
 
             if (call.hasWith()) {
                 const expectedArgs = call.getWith() as Array<unknown>;
 
-                if (givenArgs.length !== expectedArgs.length) {
-                    throw new Error(
-                        `${prefix} Expected argument count ${expectedArgs.length}, given ${givenArgs.length} ${suffix}`,
-                    );
-                }
-
-                expectedArgs.forEach((expectedArg: unknown, i) => {
-                    const arg = givenArgs[i];
-
-                    if (isArgument(expectedArg)) {
-                        expectedArg.assert(arg);
-
-                        return;
-                    }
-
-                    expect(arg).toBe(expectedArg);
-                });
+                matchArguments(expectedArgs, givenArgs, givenMethod, prefix, suffix);
             }
 
             const error = call.getError();
