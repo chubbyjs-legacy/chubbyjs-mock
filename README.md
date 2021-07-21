@@ -22,7 +22,7 @@ A very strict mocking library for class based objects.
 
 ## Requirements
 
- * node: 10
+ * node: 12
 
 ## Installation
 
