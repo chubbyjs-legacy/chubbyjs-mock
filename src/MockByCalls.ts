@@ -1,4 +1,4 @@
-import { isArgument } from './Argument/ArgumentInterface';
+import AbstractArgument from './Argument/AbstractArgument';
 import Call from './Call';
 
 class MockByCalls {
@@ -96,7 +96,7 @@ class MockByCalls {
         expectedArgs.forEach((expectedArg: unknown, i) => {
             const givenArg = givenArgs[i];
 
-            if (isArgument(expectedArg)) {
+            if (expectedArg instanceof AbstractArgument) {
                 expectedArg.assert(givenArg);
 
                 return;

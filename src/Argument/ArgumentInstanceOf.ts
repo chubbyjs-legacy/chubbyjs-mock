@@ -1,9 +1,9 @@
-import ArgumentInterface from './ArgumentInterface';
+import AbstractArgument from './AbstractArgument';
 
-class ArgumentInstanceOf implements ArgumentInterface {
-    ArgumentInterface = true;
-
-    constructor(private type: string | Function) {}
+class ArgumentInstanceOf extends AbstractArgument {
+    constructor(private type: string | Function) {
+        super();
+    }
 
     public assert(argument: any): void {
         if (typeof this.type === 'function') {
