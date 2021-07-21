@@ -41,13 +41,17 @@ import ArgumentInstanceOf from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentIn
 import Call from '@chubbyjs/chubbyjs-mock/dist/Call';
 import MockByCalls from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
 
-test('execute', () => {
-    const dateTimeService = MockByCalls<DateTimeService>(DateTimeService, [
+test('example', () => {
+    class DateTimeService {
+        public format(date: Date, format: string) {}
+    }
+
+    const mockByCalls = new MockByCalls();
+
+    const dateTimeService = mockByCalls.create<DateTimeService>(DateTimeService, [
+        Call.create('format').with(new ArgumentInstanceOf(Date), 'c').willReturn('2004-02-12T15:19:21+00:00'),
         Call.create('format')
-            .with(new ArgumentInstanceOf(Date), 'c')
-            .willReturn('2004-02-12T15:19:21+00:00'),
-        Call.create('format')
-            .with(new ArgumentCallback((date: Date) => expect(date).toBeInstanceof(Date)), 'c')
+            .with(new ArgumentCallback((date: Date) => expect(date).toBeInstanceOf(Date)), 'c')
             .willReturn('2008-05-23T08:12:55+00:00'),
     ]);
 

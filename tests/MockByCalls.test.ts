@@ -1,33 +1,25 @@
+import { describe, expect, test } from '@jest/globals';
+import ArgumentCallback from '../src/Argument/ArgumentCallback';
+import ArgumentInstanceOf from '../src/Argument/ArgumentInstanceOf';
 import Call from '../src/Call';
 import MockByCalls from '../src/MockByCalls';
-import { expect, test } from '@jest/globals';
 
-test('mocked methods', () => {
-    class BaseSample {
-        public a(name: string): string {
-            return name;
-        }
-    }
-
-    class Sample extends BaseSample {
-        public constructor(private defaultName: string) {
-            super();
+describe('MockByCalls', () => {
+    test('create', () => {
+        class DateTimeService {
+            public format(date: Date, format: string) {}
         }
 
-        public b(name: string): string {
-            return name;
-        }
+        const mockByCalls = new MockByCalls();
 
-        public c(name: string): string {
-            return name;
-        }
-    }
+        const dateTimeService = mockByCalls.create<DateTimeService>(DateTimeService, [
+            Call.create('format').with(new ArgumentInstanceOf(Date), 'c').willReturn('2004-02-12T15:19:21+00:00'),
+            Call.create('format')
+                .with(new ArgumentCallback((date: Date) => expect(date).toBeInstanceOf(Date)), 'c')
+                .willReturn('2008-05-23T08:12:55+00:00'),
+        ]);
 
-    const sample = MockByCalls<Sample>(Sample, [
-        Call.create('a').with('name1').willReturn('name1'),
-        Call.create('b').with('name2').willReturn('name2'),
-    ]);
-
-    expect(sample.a('name1')).toBe('name1');
-    expect(sample.b('name2')).toBe('name2');
+        expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
+        expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+    });
 });

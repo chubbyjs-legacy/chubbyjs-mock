@@ -1,116 +1,118 @@
 import { isArgument } from './Argument/ArgumentInterface';
 import Call from './Call';
 
-const getMethods = (givenObject: any) => {
-    const props: Array<string> = [];
+class MockByCalls {
+    public create<T extends Object>(classDefinition: any, calls: Array<Call>): T {
+        let callIndex = 0;
 
-    let object = givenObject;
-    do {
-        props.push(...Object.getOwnPropertyNames(object));
-    } while ((object = Object.getPrototypeOf(object)));
+        const mock = {
+            ...Object.fromEntries(
+                new Map<string, Function>(
+                    this.getMethods(new classDefinition()).map((method: string) => {
+                        return [
+                            method,
+                            (...args: Array<unknown>): unknown => {
+                                return mock.__mockByCalls(method, args);
+                            },
+                        ];
+                    }),
+                ),
+            ),
+            ...{
+                __mockByCalls: (givenMethod: string, givenArgs: Array<unknown>) => {
+                    const prefix = `Mock "${classDefinition.name}":`;
+                    const suffix = `at call ${callIndex}`;
 
-    return props.filter((prop) => typeof givenObject[prop] == 'function');
-};
+                    const call = calls[callIndex];
 
-const matchMethod = (expectedMethod: string, givenMethod: string, prefix: string, suffix: string) => {
-    if (givenMethod !== expectedMethod) {
-        throw new Error(`${prefix} Expected method "${expectedMethod}", given "${givenMethod}" ${suffix}`);
+                    callIndex++;
+
+                    if (!call) {
+                        throw new Error(`${prefix} Missing defintion ${suffix}`);
+                    }
+
+                    this.matchMethod(call.getMethod(), givenMethod, prefix, suffix);
+
+                    if (call.hasWith()) {
+                        const expectedArgs = call.getWith() as Array<unknown>;
+
+                        this.matchArguments(expectedArgs, givenArgs, givenMethod, prefix, suffix);
+                    }
+
+                    const error = call.getError();
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    if (call.hasReturnSelf()) {
+                        return this;
+                    }
+
+                    if (call.hasReturn()) {
+                        return call.getReturn();
+                    }
+
+                    if (call.hasReturnCallback()) {
+                        const callback = call.getReturnCallback() as Function;
+
+                        return callback(givenArgs);
+                    }
+                },
+            },
+        };
+
+        return (mock as unknown) as T;
     }
-};
 
-const matchArguments = (
-    expectedArgs: Array<unknown>,
-    givenArgs: Array<unknown>,
-    method: string,
-    prefix: string,
-    suffix: string,
-) => {
-    if (givenArgs.length !== expectedArgs.length) {
-        throw new Error(
-            `${prefix} Expected argument count ${expectedArgs.length}, given ${givenArgs.length}, method "${method}" ${suffix}`,
-        );
+    private getMethods(givenObject: any): Array<string> {
+        const props: Array<string> = [];
+
+        let object = givenObject;
+        do {
+            props.push(...Object.getOwnPropertyNames(object));
+        } while ((object = Object.getPrototypeOf(object)));
+
+        return props.filter((prop) => typeof givenObject[prop] == 'function');
     }
 
-    expectedArgs.forEach((expectedArg: unknown, i) => {
-        const givenArg = givenArgs[i];
-
-        if (isArgument(expectedArg)) {
-            expectedArg.assert(givenArg);
-
-            return;
+    private matchMethod(expectedMethod: string, givenMethod: string, prefix: string, suffix: string): void {
+        if (givenMethod !== expectedMethod) {
+            throw new Error(`${prefix} Expected method "${expectedMethod}", given "${givenMethod}" ${suffix}`);
         }
+    }
 
-        if (givenArg !== expectedArg) {
+    private matchArguments(
+        expectedArgs: Array<unknown>,
+        givenArgs: Array<unknown>,
+        method: string,
+        prefix: string,
+        suffix: string,
+    ): void {
+        if (givenArgs.length !== expectedArgs.length) {
             throw new Error(
-                `${prefix} Expected argument ${JSON.stringify(expectedArg)}, given ${JSON.stringify(
-                    givenArg,
-                )} at argument ${i}, method "${method}" ${suffix}`,
+                `${prefix} Expected argument count ${expectedArgs.length}, given ${givenArgs.length}, method "${method}" ${suffix}`,
             );
         }
-    });
-};
 
-const MockByCalls = <T extends Object>(classDefinition: any, calls: Array<Call>): T => {
-    let callIndex = 0;
+        expectedArgs.forEach((expectedArg: unknown, i) => {
+            const givenArg = givenArgs[i];
 
-    const mock = {
-        ...Object.fromEntries(
-            new Map<string, Function>(
-                getMethods(new classDefinition()).map((method: string) => {
-                    return [
-                        method,
-                        (...args: Array<unknown>): unknown => {
-                            return mock.__mockByCalls(method, args);
-                        },
-                    ];
-                }),
-            ),
-        ),
-        ...{
-            __mockByCalls: (givenMethod: string, givenArgs: Array<unknown>) => {
-                const prefix = `Mock "${classDefinition.name}":`;
-                const suffix = `at call ${callIndex}`;
+            if (isArgument(expectedArg)) {
+                expectedArg.assert(givenArg);
 
-                const call = calls[callIndex];
+                return;
+            }
 
-                callIndex++;
-
-                if (!call) {
-                    throw new Error(`${prefix} Missing defintion ${suffix}`);
-                }
-
-                matchMethod(call.getMethod(), givenMethod, prefix, suffix);
-
-                if (call.hasWith()) {
-                    const expectedArgs = call.getWith() as Array<unknown>;
-
-                    matchArguments(expectedArgs, givenArgs, givenMethod, prefix, suffix);
-                }
-
-                const error = call.getError();
-
-                if (error) {
-                    throw error;
-                }
-
-                if (call.hasReturnSelf()) {
-                    return this;
-                }
-
-                if (call.hasReturn()) {
-                    return call.getReturn();
-                }
-
-                if (call.hasReturnCallback()) {
-                    const callback = call.getReturnCallback() as Function;
-
-                    return callback(givenArgs);
-                }
-            },
-        },
-    };
-
-    return (mock as unknown) as T;
-};
+            if (givenArg !== expectedArg) {
+                throw new Error(
+                    `${prefix} Expected argument ${JSON.stringify(expectedArg)}, given ${JSON.stringify(
+                        givenArg,
+                    )} at argument ${i}, method "${method}" ${suffix}`,
+                );
+            }
+        });
+    }
+}
 
 export default MockByCalls;
