@@ -7,16 +7,14 @@ class MockByCalls {
 
         const mock = {
             ...Object.fromEntries(
-                new Map<string, Function>(
-                    this.getMethods(new classDefinition()).map((method: string) => {
-                        return [
-                            method,
-                            (...args: Array<unknown>): unknown => {
-                                return mock.__mockByCalls(method, args);
-                            },
-                        ];
-                    }),
-                ),
+                this.getMethods(new classDefinition()).map((method: string) => {
+                    return [
+                        method,
+                        (...args: Array<unknown>): unknown => {
+                            return mock.__mockByCalls(method, args);
+                        },
+                    ];
+                }),
             ),
             ...{
                 __mockByCalls: (givenMethod: string, givenArgs: Array<unknown>) => {
