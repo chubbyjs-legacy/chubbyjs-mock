@@ -18,7 +18,7 @@
 
 ## Description
 
-A helper trait simplify mocking within jest.
+A very strict mocking library for class based objects.
 
 ## Requirements
 

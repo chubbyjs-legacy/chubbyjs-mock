@@ -1,7 +1,7 @@
 {
   "name": "chubbyjs-mock",
-  "version": "1.1.0",
-  "description": "A helper trait simplify mocking within jest.",
+  "version": "1.0.0",
+  "description": "A very strict mocking library for class based objects.",
   "keywords": [
     "chubbyjs",
     "jest",
