@@ -8,6 +8,7 @@ describe('MockByCalls', () => {
     describe('create', () => {
         test('success', () => {
             class DateTimeService {
+                private timezone = 'UTC';
                 public format(date: Date, format: string) {}
             }
 
@@ -22,6 +23,8 @@ describe('MockByCalls', () => {
 
             expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
             expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+
+            expect(dateTimeService['timezone']).toBeUndefined(); // validate property doesn't get mocked
         });
 
         test('Missing call', () => {
