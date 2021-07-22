@@ -105,8 +105,8 @@ class MockByCalls {
             );
         }
 
-        expectedArgs.forEach((expectedArg: unknown, i) => {
-            const givenArg = givenArgs[i];
+        expectedArgs.forEach((expectedArg: unknown, argIndex) => {
+            const givenArg = givenArgs[argIndex];
 
             if (expectedArg instanceof AbstractArgument) {
                 expectedArg.assert(givenArg);
@@ -120,6 +120,7 @@ class MockByCalls {
                         class: className,
                         callIndex,
                         method,
+                        argIndex,
                         expectedArg,
                         givenArg,
                     })}`,

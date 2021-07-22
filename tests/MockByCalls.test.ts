@@ -110,7 +110,7 @@ describe('MockByCalls', () => {
             expect(() => {
                 dateTimeService.format(new Date(), 'z');
             }).toThrow(
-                'Argument mismatch: {"class":"DateTimeService","callIndex":1,"method":"format","expectedArg":"c","givenArg":"z"}',
+                'Argument mismatch: {"class":"DateTimeService","callIndex":1,"method":"format","argIndex":1,"expectedArg":"c","givenArg":"z"}',
             );
         });
     });
