@@ -3,6 +3,8 @@ import Call from './Call';
 
 class MockByCalls {
     public create<T extends Object>(classDefinition: any, calls: Array<Call>): T {
+        const className = classDefinition.name;
+
         let callIndex = 0;
 
         const mock = {
@@ -18,24 +20,21 @@ class MockByCalls {
             ),
             ...{
                 __mockByCalls: (givenMethod: string, givenArgs: Array<unknown>) => {
-                    const prefix = `Mock "${classDefinition.name}":`;
-                    const suffix = `at call ${callIndex}`;
-
                     const call = calls[callIndex];
 
-                    callIndex++;
-
                     if (!call) {
-                        throw new Error(`${prefix} Missing defintion ${suffix}`);
+                        throw new Error(`Missing call: ${JSON.stringify({ class: className, callIndex })}`);
                     }
 
-                    this.matchMethod(call.getMethod(), givenMethod, prefix, suffix);
+                    this.matchMethod(call.getMethod(), givenMethod, className, callIndex);
 
                     if (call.hasWith()) {
                         const expectedArgs = call.getWith() as Array<unknown>;
 
-                        this.matchArguments(expectedArgs, givenArgs, givenMethod, prefix, suffix);
+                        this.matchArguments(expectedArgs, givenArgs, className, callIndex, givenMethod);
                     }
+
+                    callIndex++;
 
                     const error = call.getError();
 
@@ -74,22 +73,35 @@ class MockByCalls {
         return props.filter((prop) => typeof givenObject[prop] == 'function');
     }
 
-    private matchMethod(expectedMethod: string, givenMethod: string, prefix: string, suffix: string): void {
+    private matchMethod(expectedMethod: string, givenMethod: string, className: string, callIndex: number): void {
         if (givenMethod !== expectedMethod) {
-            throw new Error(`${prefix} Expected method "${expectedMethod}", given "${givenMethod}" ${suffix}`);
+            throw new Error(
+                `Method mismatch: ${JSON.stringify({
+                    class: className,
+                    callIndex,
+                    expectedMethod,
+                    givenMethod,
+                })}`,
+            );
         }
     }
 
     private matchArguments(
         expectedArgs: Array<unknown>,
         givenArgs: Array<unknown>,
+        className: string,
+        callIndex: number,
         method: string,
-        prefix: string,
-        suffix: string,
     ): void {
         if (givenArgs.length !== expectedArgs.length) {
             throw new Error(
-                `${prefix} Expected argument count ${expectedArgs.length}, given ${givenArgs.length}, method "${method}" ${suffix}`,
+                `Arguments count mismatch: ${JSON.stringify({
+                    class: className,
+                    callIndex,
+                    method,
+                    expectedArgsLength: expectedArgs.length,
+                    givenArgsLength: givenArgs.length,
+                })}`,
             );
         }
 
@@ -104,9 +116,13 @@ class MockByCalls {
 
             if (givenArg !== expectedArg) {
                 throw new Error(
-                    `${prefix} Expected argument ${JSON.stringify(expectedArg)}, given ${JSON.stringify(
+                    `Argument mismatch: ${JSON.stringify({
+                        class: className,
+                        callIndex,
+                        method,
+                        expectedArg,
                         givenArg,
-                    )} at argument ${i}, method "${method}" ${suffix}`,
+                    })}`,
                 );
             }
         });
