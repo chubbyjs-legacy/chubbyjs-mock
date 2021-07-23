@@ -43,7 +43,7 @@ class MockByCalls {
                     }
 
                     if (call.hasReturnSelf()) {
-                        return this;
+                        return mock;
                     }
 
                     if (call.hasReturn()) {

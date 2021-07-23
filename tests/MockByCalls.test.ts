@@ -113,5 +113,83 @@ describe('MockByCalls', () => {
                 'Argument mismatch: {"class":"DateTimeService","callIndex":1,"method":"format","argIndex":1,"expectedArg":"c","givenArg":"z"}',
             );
         });
+
+        test('With with', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test').with()]);
+
+            dummy.test();
+        });
+
+        test('Without with and without any return', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test')]);
+
+            dummy.test();
+        });
+
+        test('With error', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const error = new Error('test');
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test').willThrowError(error)]);
+
+            expect(() => {
+                dummy.test();
+            }).toThrow(error);
+        });
+
+        test('With return self', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test').willReturnSelf()]);
+
+            expect(dummy.test()).toBe(dummy);
+        });
+
+        test('With return', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test').willReturn('test')]);
+
+            expect(dummy.test()).toBe('test');
+        });
+
+        test('With return callback', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const callback = () => 'test';
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, [Call.create('test').willReturnCallback(callback)]);
+
+            expect(dummy.test()).toBe('test');
+        });
     });
 });
