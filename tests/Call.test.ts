@@ -9,7 +9,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(false);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual(undefined);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(undefined);
@@ -23,7 +22,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(true);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual([]);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(undefined);
@@ -37,7 +35,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(true);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual(['argument']);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(undefined);
@@ -53,7 +50,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(false);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual(undefined);
         expect(call.getError()).toBe(error);
         expect(call.getReturn()).toBe(undefined);
@@ -67,7 +63,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(false);
         expect(call.hasReturnSelf()).toBe(true);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual(undefined);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(undefined);
@@ -83,7 +78,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(false);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(true);
-        expect(call.hasReturnCallback()).toBe(false);
         expect(call.getWith()).toEqual(undefined);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(value);
@@ -99,7 +93,6 @@ describe('Call', () => {
         expect(call.hasWith()).toBe(false);
         expect(call.hasReturnSelf()).toBe(false);
         expect(call.hasReturn()).toBe(false);
-        expect(call.hasReturnCallback()).toBe(true);
         expect(call.getWith()).toEqual(undefined);
         expect(call.getError()).toBe(undefined);
         expect(call.getReturn()).toBe(undefined);

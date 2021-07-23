@@ -63,10 +63,10 @@ class MockByCalls {
                             return call.getReturn();
                         }
 
-                        if (call.hasReturnCallback()) {
-                            const callback = call.getReturnCallback() as Function;
+                        const returnCallback = call.getReturnCallback();
 
-                            return callback(givenArgs);
+                        if (returnCallback) {
+                            return returnCallback(givenArgs);
                         }
                     },
                 },

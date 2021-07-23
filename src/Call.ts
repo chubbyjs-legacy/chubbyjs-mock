@@ -5,7 +5,6 @@ class Call {
     private error: Error | undefined;
     private hasReturnSelfValue: boolean = false;
     private hasReturnValue: boolean = false;
-    private hasReturnCallbackValue: boolean = false;
     private returnValue: any;
     private returnCallbackValue: Function | undefined;
 
@@ -33,7 +32,7 @@ class Call {
             throw new Error('willThrowError: There is already a return');
         }
 
-        if (this.hasReturnCallbackValue) {
+        if (this.returnCallbackValue) {
             throw new Error('willThrowError: There is already a return callback');
         }
 
@@ -51,7 +50,7 @@ class Call {
             throw new Error('willReturnSelf: There is already a return');
         }
 
-        if (this.hasReturnCallbackValue) {
+        if (this.returnCallbackValue) {
             throw new Error('willReturnSelf: There is already a return callback');
         }
 
@@ -69,7 +68,7 @@ class Call {
             throw new Error('willReturn: There is already a return self');
         }
 
-        if (this.hasReturnCallbackValue) {
+        if (this.returnCallbackValue) {
             throw new Error('willReturn: There is already a return callback');
         }
 
@@ -92,7 +91,6 @@ class Call {
             throw new Error('willReturnCallback: There is already a return');
         }
 
-        this.hasReturnCallbackValue = true;
         this.returnCallbackValue = returnCallback;
 
         return this;
@@ -112,10 +110,6 @@ class Call {
 
     public hasReturn(): boolean {
         return this.hasReturnValue;
-    }
-
-    public hasReturnCallback(): boolean {
-        return this.hasReturnCallbackValue;
     }
 
     public getWith(): Array<unknown> | undefined {
