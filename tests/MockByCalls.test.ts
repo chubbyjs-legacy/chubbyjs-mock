@@ -8,7 +8,6 @@ describe('MockByCalls', () => {
     describe('create', () => {
         test('success', () => {
             class DateTimeService {
-                private timezone = 'UTC';
                 public format(date: Date, format: string) {}
             }
 
@@ -24,7 +23,7 @@ describe('MockByCalls', () => {
             expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
             expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
 
-            expect(dateTimeService['timezone']).toBeUndefined(); // validate property doesn't get mocked
+            expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
         });
 
         test('Missing call', () => {
@@ -202,6 +201,19 @@ describe('MockByCalls', () => {
             const dummy = mockByCalls.create<Dummy>(Dummy, []);
 
             expect(Object.getOwnPropertyNames(dummy).length).toBe(13);
+        });
+
+        test('No mocked properties', () => {
+            class DateTimeService {
+                private timezone = 'UTC';
+                public format(date: Date, format: string) {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dateTimeService = mockByCalls.create<DateTimeService>(DateTimeService, []);
+
+            expect(dateTimeService['timezone']).toBeUndefined();
         });
     });
 });

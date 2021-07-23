@@ -2,64 +2,79 @@ import AbstractArgument from './Argument/AbstractArgument';
 import Call from './Call';
 
 class MockByCalls {
-    public create<T extends Object>(classDefinition: any, calls: Array<Call>): T {
-        const className = classDefinition.name;
-
-        let callIndex = 0;
-
+    public create<T extends Object>(
+        classDefinition: any,
+        calls: Array<Call>,
+    ): T & { __mockByCalls: { calls: Array<Call>; index: number } } {
         const mock = {
             ...Object.fromEntries(
                 this.getMethods(new classDefinition()).map((method: string) => {
                     return [
                         method,
                         (...args: Array<unknown>): unknown => {
-                            return mock.__mockByCalls(method, args);
+                            return mock.__mockByCalls.mock(method, args);
                         },
                     ];
                 }),
             ),
             ...{
-                __mockByCalls: (givenMethod: string, givenArgs: Array<unknown>) => {
-                    const call = calls[callIndex];
+                __mockByCalls: {
+                    calls,
+                    index: 0,
+                    mock: (givenMethod: string, givenArgs: Array<unknown>): unknown => {
+                        const call = mock.__mockByCalls.calls[mock.__mockByCalls.index];
 
-                    if (!call) {
-                        throw new Error(`Missing call: ${JSON.stringify({ class: className, callIndex })}`);
-                    }
+                        if (!call) {
+                            throw new Error(
+                                `Missing call: ${JSON.stringify({
+                                    class: classDefinition.name,
+                                    callIndex: mock.__mockByCalls.index,
+                                })}`,
+                            );
+                        }
 
-                    this.matchMethod(call.getMethod(), givenMethod, className, callIndex);
+                        this.matchMethod(call.getMethod(), givenMethod, classDefinition.name, mock.__mockByCalls.index);
 
-                    if (call.hasWith()) {
-                        const expectedArgs = call.getWith() as Array<unknown>;
+                        if (call.hasWith()) {
+                            const expectedArgs = call.getWith() as Array<unknown>;
 
-                        this.matchArguments(expectedArgs, givenArgs, className, callIndex, givenMethod);
-                    }
+                            this.matchArguments(
+                                expectedArgs,
+                                givenArgs,
+                                classDefinition.name,
+                                mock.__mockByCalls.index,
+                                givenMethod,
+                            );
+                        }
 
-                    callIndex++;
+                        mock.__mockByCalls.index++;
 
-                    const error = call.getError();
+                        const error = call.getError();
 
-                    if (error) {
-                        throw error;
-                    }
+                        if (error) {
+                            throw error;
+                        }
 
-                    if (call.hasReturnSelf()) {
-                        return mock;
-                    }
+                        if (call.hasReturnSelf()) {
+                            return mock;
+                        }
 
-                    if (call.hasReturn()) {
-                        return call.getReturn();
-                    }
+                        if (call.hasReturn()) {
+                            return call.getReturn();
+                        }
 
-                    if (call.hasReturnCallback()) {
-                        const callback = call.getReturnCallback() as Function;
+                        if (call.hasReturnCallback()) {
+                            const callback = call.getReturnCallback() as Function;
 
-                        return callback(givenArgs);
-                    }
+                            return callback(givenArgs);
+                        }
+                    },
                 },
             },
         };
 
-        return (mock as unknown) as T;
+        // @ts-ignore
+        return mock;
     }
 
     private getMethods(givenObject: any): Array<string> {

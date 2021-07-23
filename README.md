@@ -59,6 +59,9 @@ test('example', () => {
 
     expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
     expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+
+    // if you want to be sure, that the mocked calls and the method call matches
+    expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
 });
 ```
 
