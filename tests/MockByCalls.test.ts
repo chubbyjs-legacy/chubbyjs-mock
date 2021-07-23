@@ -191,5 +191,17 @@ describe('MockByCalls', () => {
 
             expect(dummy.test()).toBe('test');
         });
+
+        test('Mocked method count', () => {
+            class Dummy {
+                public test() {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dummy = mockByCalls.create<Dummy>(Dummy, []);
+
+            expect(Object.getOwnPropertyNames(dummy).length).toBe(13);
+        });
     });
 });
