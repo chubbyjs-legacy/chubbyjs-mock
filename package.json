@@ -40,7 +40,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^4.4.0",
