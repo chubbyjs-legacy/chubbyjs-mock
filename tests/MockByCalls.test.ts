@@ -215,5 +215,29 @@ describe('MockByCalls', () => {
 
             expect(dateTimeService['timezone']).toBeUndefined();
         });
+
+        test('success with function instead of class', () => {
+            function DateTimeService() {
+                // @ts-ignore
+                this.format = (date: Date, format: string) => {};
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dateTimeService = mockByCalls.create<typeof DateTimeService>(DateTimeService, [
+                Call.create('format').with(new ArgumentInstanceOf(Date), 'c').willReturn('2004-02-12T15:19:21+00:00'),
+                Call.create('format')
+                    .with(new ArgumentCallback((date: Date) => expect(date).toBeInstanceOf(Date)), 'c')
+                    .willReturn('2008-05-23T08:12:55+00:00'),
+            ]);
+
+            // @ts-ignore
+            expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
+
+            // @ts-ignore
+            expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+
+            expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+        });
     });
 });
