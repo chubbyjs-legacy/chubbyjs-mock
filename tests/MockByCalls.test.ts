@@ -41,7 +41,7 @@ describe('MockByCalls', () => {
 
             expect(() => {
                 dateTimeService.format(new Date(), 'c');
-            }).toThrow('Missing call: {"class":"DateTimeService","callIndex":1}');
+            }).toThrow('Missing call: {"class":"DateTimeService","callIndex":1,"actualMethod":"format"}');
         });
 
         test('Method mismatch', () => {
@@ -63,7 +63,7 @@ describe('MockByCalls', () => {
             expect(() => {
                 dateTimeService.toString();
             }).toThrow(
-                'Method mismatch: {"class":"DateTimeService","callIndex":1,"expectedMethod":"format","givenMethod":"toString"}',
+                'Method mismatch: {"class":"DateTimeService","callIndex":1,"actualMethod":"toString","expectedMethod":"format"}',
             );
         });
 
@@ -86,7 +86,7 @@ describe('MockByCalls', () => {
             expect(() => {
                 dateTimeService.format(new Date(), 'c');
             }).toThrow(
-                'Arguments count mismatch: {"class":"DateTimeService","callIndex":1,"method":"format","expectedArgsLength":1,"givenArgsLength":2}',
+                'Arguments count mismatch: {"class":"DateTimeService","callIndex":1,"actualMethod":"format","actualArgsLength":2,"expectedArgsLength":1}',
             );
         });
 
@@ -109,7 +109,7 @@ describe('MockByCalls', () => {
             expect(() => {
                 dateTimeService.format(new Date(), 'z');
             }).toThrow(
-                'Argument mismatch: {"class":"DateTimeService","callIndex":1,"method":"format","argIndex":1,"expectedArg":"c","givenArg":"z"}',
+                'Argument mismatch: {"class":"DateTimeService","callIndex":1,"actualMethod":"format","argIndex":1,"actualArg":"z","expectedArg":"c"}',
             );
         });
 

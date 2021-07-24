@@ -21,7 +21,7 @@ class MockByCalls {
                 __mockByCalls: {
                     calls,
                     index: 0,
-                    mock: (givenMethod: string, givenArgs: Array<unknown>): unknown => {
+                    mock: (actualMethod: string, actualArgs: Array<unknown>): unknown => {
                         const call = mock.__mockByCalls.calls[mock.__mockByCalls.index];
 
                         if (!call) {
@@ -29,21 +29,27 @@ class MockByCalls {
                                 `Missing call: ${JSON.stringify({
                                     class: classDefinition.name,
                                     callIndex: mock.__mockByCalls.index,
+                                    actualMethod,
                                 })}`,
                             );
                         }
 
-                        this.matchMethod(call.getMethod(), givenMethod, classDefinition.name, mock.__mockByCalls.index);
+                        this.matchMethod(
+                            call.getMethod(),
+                            actualMethod,
+                            classDefinition.name,
+                            mock.__mockByCalls.index,
+                        );
 
                         if (call.hasWith()) {
                             const expectedArgs = call.getWith() as Array<unknown>;
 
                             this.matchArguments(
                                 expectedArgs,
-                                givenArgs,
+                                actualArgs,
                                 classDefinition.name,
                                 mock.__mockByCalls.index,
-                                givenMethod,
+                                actualMethod,
                             );
                         }
 
@@ -66,7 +72,7 @@ class MockByCalls {
                         const returnCallback = call.getReturnCallback();
 
                         if (returnCallback) {
-                            return returnCallback(givenArgs);
+                            return returnCallback(actualArgs);
                         }
                     },
                 },
@@ -77,25 +83,25 @@ class MockByCalls {
         return mock;
     }
 
-    private getMethods(givenObject: any): Array<string> {
+    private getMethods(actualObject: any): Array<string> {
         const props: Array<string> = [];
 
-        let object = givenObject;
+        let object = actualObject;
         do {
             props.push(...Object.getOwnPropertyNames(object));
         } while ((object = Object.getPrototypeOf(object)));
 
-        return props.filter((prop) => typeof givenObject[prop] == 'function');
+        return props.filter((prop) => typeof actualObject[prop] == 'function');
     }
 
-    private matchMethod(expectedMethod: string, givenMethod: string, className: string, callIndex: number): void {
-        if (givenMethod !== expectedMethod) {
+    private matchMethod(expectedMethod: string, actualMethod: string, className: string, callIndex: number): void {
+        if (actualMethod !== expectedMethod) {
             throw new Error(
                 `Method mismatch: ${JSON.stringify({
                     class: className,
                     callIndex,
+                    actualMethod,
                     expectedMethod,
-                    givenMethod,
                 })}`,
             );
         }
@@ -103,41 +109,41 @@ class MockByCalls {
 
     private matchArguments(
         expectedArgs: Array<unknown>,
-        givenArgs: Array<unknown>,
+        actualArgs: Array<unknown>,
         className: string,
         callIndex: number,
-        method: string,
+        actualMethod: string,
     ): void {
-        if (givenArgs.length !== expectedArgs.length) {
+        if (actualArgs.length !== expectedArgs.length) {
             throw new Error(
                 `Arguments count mismatch: ${JSON.stringify({
                     class: className,
                     callIndex,
-                    method,
+                    actualMethod,
+                    actualArgsLength: actualArgs.length,
                     expectedArgsLength: expectedArgs.length,
-                    givenArgsLength: givenArgs.length,
                 })}`,
             );
         }
 
         expectedArgs.forEach((expectedArg: unknown, argIndex) => {
-            const givenArg = givenArgs[argIndex];
+            const actualArg = actualArgs[argIndex];
 
             if (expectedArg instanceof AbstractArgument) {
-                expectedArg.assert(givenArg);
+                expectedArg.assert(actualArg);
 
                 return;
             }
 
-            if (givenArg !== expectedArg) {
+            if (actualArg !== expectedArg) {
                 throw new Error(
                     `Argument mismatch: ${JSON.stringify({
                         class: className,
                         callIndex,
-                        method,
+                        actualMethod,
                         argIndex,
+                        actualArg,
                         expectedArg,
-                        givenArg,
                     })}`,
                 );
             }
