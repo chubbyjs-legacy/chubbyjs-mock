@@ -26,10 +26,10 @@ A very strict mocking library for class based objects.
 
 ## Installation
 
-Through [NPM](https://www.npmjs.com) as [chubbyjs-mock][1].
+Through [NPM](https://www.npmjs.com) as [@chubbyjs/chubbyjs-mock][1].
 
 ```sh
-npm i chubbyjs-mock@1.0
+npm i @chubbyjs/chubbyjs-mock@1.0
 ```
 
 ## Usage
@@ -69,4 +69,4 @@ test('example', () => {
 
 Dominik Zogg 2021
 
-[1]: https://www.npmjs.com/package/chubbyjs-mock
+[1]: https://www.npmjs.com/package/@chubbyjs/chubbyjs-mock
