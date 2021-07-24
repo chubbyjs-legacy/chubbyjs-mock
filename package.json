@@ -1,5 +1,5 @@
 {
-  "name": "chubbyjs-mock",
+  "name": "@chubbyjs/chubbyjs-mock",
   "version": "1.0.0",
   "description": "A very strict mocking library for class based objects.",
   "keywords": [
