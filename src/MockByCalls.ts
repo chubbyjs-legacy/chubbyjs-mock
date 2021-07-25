@@ -4,7 +4,7 @@ import Call from './Call';
 class MockByCalls {
     public create<T extends Object>(
         classDefinition: any,
-        calls: Array<Call>,
+        calls: Array<Call> = [],
     ): T & { __mockByCalls: { calls: Array<Call>; index: number } } {
         const mock = {
             ...Object.fromEntries(

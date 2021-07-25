@@ -6,7 +6,7 @@ import MockByCalls from '../src/MockByCalls';
 
 describe('MockByCalls', () => {
     describe('create', () => {
-        test('success', () => {
+        test('With successfull calls', () => {
             class DateTimeService {
                 public format(date: Date, format: string) {}
             }
@@ -216,7 +216,7 @@ describe('MockByCalls', () => {
             expect(dateTimeService['timezone']).toBeUndefined();
         });
 
-        test('success with function instead of class', () => {
+        test('With function instead of class', () => {
             function DateTimeService() {
                 // @ts-ignore
                 this.format = (date: Date, format: string) => {};
@@ -236,6 +236,18 @@ describe('MockByCalls', () => {
 
             // @ts-ignore
             expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
+
+            expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+        });
+
+        test('No calls', () => {
+            class DateTimeService {
+                public format(date: Date, format: string) {}
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dateTimeService = mockByCalls.create<DateTimeService>(DateTimeService);
 
             expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
         });
