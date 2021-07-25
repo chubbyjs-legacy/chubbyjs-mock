@@ -253,14 +253,14 @@ describe('MockByCalls', () => {
         });
 
         test('With interface', () => {
-            interface DateTimeService {
+            interface DateTimeServiceInterface {
                 format(date: Date, format: string): string;
             }
 
             const mockByCalls = new MockByCalls();
 
-            const dateTimeService = mockByCalls.create<DateTimeService>(
-                class {
+            const dateTimeService = mockByCalls.create<DateTimeServiceInterface>(
+                class DateTimeService {
                     format(date: Date, format: string) {}
                 },
                 [Call.create('format').with(new ArgumentInstanceOf(Date), 'c').willReturn('2004-02-12T15:19:21+00:00')],
@@ -272,21 +272,21 @@ describe('MockByCalls', () => {
         });
 
         test('With interface and missing call', () => {
-            interface DateTimeService {
+            interface DateTimeServiceInterface {
                 format(date: Date, format: string): string;
             }
 
             const mockByCalls = new MockByCalls();
 
-            const dateTimeService = mockByCalls.create<DateTimeService>(
-                class {
+            const dateTimeService = mockByCalls.create<DateTimeServiceInterface>(
+                class DateTimeService {
                     format(date: Date, format: string) {}
                 },
             );
 
             expect(() => {
                 dateTimeService.format(new Date(), 'c');
-            }).toThrow('Missing call: {"class":"","callIndex":0,"actualMethod":"format"}');
+            }).toThrow('Missing call: {"class":"DateTimeService","callIndex":0,"actualMethod":"format"}');
         });
     });
 });
