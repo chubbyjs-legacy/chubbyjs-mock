@@ -251,5 +251,42 @@ describe('MockByCalls', () => {
 
             expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
         });
+
+        test('With interface', () => {
+            interface DateTimeService {
+                format(date: Date, format: string): string;
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dateTimeService = mockByCalls.create<DateTimeService>(
+                class {
+                    format(date: Date, format: string) {}
+                },
+                [Call.create('format').with(new ArgumentInstanceOf(Date), 'c').willReturn('2004-02-12T15:19:21+00:00')],
+            );
+
+            expect(dateTimeService.format(new Date(), 'c')).toBe('2004-02-12T15:19:21+00:00');
+
+            expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+        });
+
+        test('With interface and missing call', () => {
+            interface DateTimeService {
+                format(date: Date, format: string): string;
+            }
+
+            const mockByCalls = new MockByCalls();
+
+            const dateTimeService = mockByCalls.create<DateTimeService>(
+                class {
+                    format(date: Date, format: string) {}
+                },
+            );
+
+            expect(() => {
+                dateTimeService.format(new Date(), 'c');
+            }).toThrow('Missing call: {"class":"","callIndex":0,"actualMethod":"format"}');
+        });
     });
 });
