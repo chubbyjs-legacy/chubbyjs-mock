@@ -29,7 +29,7 @@ A very strict mocking library for class based objects.
 Through [NPM](https://www.npmjs.com) as [@chubbyjs/chubbyjs-mock][1].
 
 ```sh
-npm i @chubbyjs/chubbyjs-mock@1.0
+npm i @chubbyjs/chubbyjs-mock@1.0.1
 ```
 
 ## Usage
