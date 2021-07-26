@@ -111,7 +111,7 @@ test('example', () => {
 
 ### Mock a instantiable function
 
-It's possible but it should be done, cause to get it work there need to be plenty of ts-ignore.
+It's possible but it should not be done, cause to get it work there need to be plenty of ts-ignore.
 
 ```ts
 import { expect, test } from '@jest/globals';
