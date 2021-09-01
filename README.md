@@ -29,7 +29,7 @@ A very strict mocking library for class based objects.
 Through [NPM](https://www.npmjs.com) as [@chubbyjs/chubbyjs-mock][1].
 
 ```sh
-npm i @chubbyjs/chubbyjs-mock@1.0.1
+npm i @chubbyjs/chubbyjs-mock@1.1.0
 ```
 
 ## Usage
@@ -41,7 +41,7 @@ import { expect, test } from '@jest/globals';
 import ArgumentCallback from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentCallback';
 import ArgumentInstanceOf from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentInstanceOf';
 import Call from '@chubbyjs/chubbyjs-mock/dist/Call';
-import MockByCalls from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
+import MockByCalls, { mockByCallsUsed } from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
 
 test('example', () => {
     class DateTimeService {
@@ -65,7 +65,7 @@ test('example', () => {
     expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
 
     // if you want to be sure, that the mocked calls and the method call matches
-    expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+    expect(mockByCallsUsed(dateTimeService)).toBe(true);
 });
 ```
 
@@ -76,7 +76,7 @@ import { expect, test } from '@jest/globals';
 import ArgumentCallback from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentCallback';
 import ArgumentInstanceOf from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentInstanceOf';
 import Call from '@chubbyjs/chubbyjs-mock/dist/Call';
-import MockByCalls from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
+import MockByCalls, { mockByCallsUsed } from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
 
 test('example', () => {
     interface DateTimeServiceInterface {
@@ -105,7 +105,7 @@ test('example', () => {
     expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
 
     // if you want to be sure, that the mocked calls and the method call matches
-    expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+    expect(mockByCallsUsed(dateTimeService)).toBe(true);
 });
 ```
 
@@ -118,7 +118,7 @@ import { expect, test } from '@jest/globals';
 import ArgumentCallback from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentCallback';
 import ArgumentInstanceOf from '@chubbyjs/chubbyjs-mock/dist/Argument/ArgumentInstanceOf';
 import Call from '@chubbyjs/chubbyjs-mock/dist/Call';
-import MockByCalls from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
+import MockByCalls, { mockByCallsUsed } from '@chubbyjs/chubbyjs-mock/dist/MockByCalls';
 
 test('example', () => {
     function DateTimeService() {
@@ -146,7 +146,7 @@ test('example', () => {
     expect(dateTimeService.format(new Date(), 'c')).toBe('2008-05-23T08:12:55+00:00');
 
     // if you want to be sure, that the mocked calls and the method call matches
-    expect(dateTimeService.__mockByCalls.calls.length).toBe(dateTimeService.__mockByCalls.index);
+    expect(mockByCallsUsed(dateTimeService)).toBe(true);
 });
 ```
 

@@ -2,7 +2,17 @@ import { describe, expect, test } from '@jest/globals';
 import ArgumentCallback from '../src/Argument/ArgumentCallback';
 import ArgumentInstanceOf from '../src/Argument/ArgumentInstanceOf';
 import Call from '../src/Call';
-import MockByCalls from '../src/MockByCalls';
+import MockByCalls, { mockByCallsUsed } from '../src/MockByCalls';
+
+describe('mockByCallsUsed', () => {
+    test('dummy called', () => {
+        expect(mockByCallsUsed({ __mockByCalls: { calls: [Call.create('dummy')], index: 1 } })).toBe(true);
+    });
+
+    test('dummy not called', () => {
+        expect(mockByCallsUsed({ __mockByCalls: { calls: [Call.create('dummy')], index: 0 } })).toBe(false);
+    });
+});
 
 describe('MockByCalls', () => {
     describe('create', () => {

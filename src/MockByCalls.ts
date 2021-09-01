@@ -1,11 +1,17 @@
 import AbstractArgument from './Argument/AbstractArgument';
 import Call from './Call';
 
+type Mock = {
+    __mockByCalls: {
+        calls: Array<Call>;
+        index: number;
+    };
+};
+
+export const mockByCallsUsed = (mock: Mock) => mock.__mockByCalls.calls.length === mock.__mockByCalls.index;
+
 class MockByCalls {
-    public create<T extends Object>(
-        classDefinition: any,
-        calls: Array<Call> = [],
-    ): T & { __mockByCalls: { calls: Array<Call>; index: number } } {
+    public create<T extends Object>(classDefinition: any, calls: Array<Call> = []): T & Mock {
         const mock = {
             ...Object.fromEntries(
                 this.getMethods(new classDefinition()).map((method: string) => {
