@@ -78,7 +78,7 @@ class MockByCalls {
                         const returnCallback = call.getReturnCallback();
 
                         if (returnCallback) {
-                            return returnCallback(actualArgs);
+                            return returnCallback(...actualArgs);
                         }
                     },
                 },

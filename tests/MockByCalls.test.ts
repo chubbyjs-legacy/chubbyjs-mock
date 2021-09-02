@@ -277,7 +277,12 @@ describe('MockByCalls', () => {
                     }
                 }
 
-                const callback = () => 'test';
+                const callback = (date: Date, format: string) => {
+                    expect(date).toBeInstanceOf(Date);
+                    expect(format).toBe('c');
+
+                    return 'test';
+                };
 
                 const mockByCalls = new MockByCalls();
 
